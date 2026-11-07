@@ -1,0 +1,12 @@
+# 私有仓库:包含开发环境本地产物,不含任何可再分发内容
+downloads/
+tools/
+dist/
+*.log
+*.tmp
+__pycache__/
+
+# Godot/验证过程的临时输出
+out.txt
+chk.log
+help.txt

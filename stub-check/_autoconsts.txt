@@ -1,0 +1,4 @@
+const StbLog = preload("res://stubs/mod_loader_log.gd")
+const StbMod = preload("res://stubs/mod_loader_mod.gd")
+const StbRun = preload("res://stubs/run_data.gd")
+const StbUtils = preload("res://stubs/utils.gd")

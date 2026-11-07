@@ -1,0 +1,12 @@
+config_version=4
+
+[application]
+config/name="giftbro-stub-check"
+
+[autoload]
+
+ModLoaderLog="*res://stubs/mod_loader_log.gd"
+ModLoaderMod="*res://stubs/mod_loader_mod.gd"
+RunData="*res://stubs/run_data.gd"
+Utils="*res://stubs/utils.gd"
+SoundManager="*res://stubs/sound_manager.gd"

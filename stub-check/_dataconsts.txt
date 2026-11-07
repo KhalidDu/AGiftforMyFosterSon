@@ -1,0 +1,5 @@
+const StbItemData = preload("res://stubs/item_data.gd")
+const StbCharacterData = preload("res://stubs/character_data.gd")
+const StbConsumableData = preload("res://stubs/consumable_data.gd")
+const StbUpgradeData = preload("res://stubs/upgrade_data.gd")
+const StbProjectileEffect = preload("res://stubs/projectile_effect.gd")

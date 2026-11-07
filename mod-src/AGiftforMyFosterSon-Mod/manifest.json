@@ -1,0 +1,20 @@
+{
+	"name": "Mod",
+	"namespace": "AGiftforMyFosterSon",
+	"version_number": "0.1.5",
+	"description": "这是一份给我义子的礼物 (A Gift for My Foster Son) — Co-op item gifting for Brotato. 合作模式：把已拥有的道具赠送给指定队友。",
+	"website_url": "",
+	"dependencies": [],
+	"extra": {
+		"godot": {
+			"authors": ["AGiftforMyFosterSon"],
+			"description_rich": "[h1]这是一份给我义子的礼物[/h1]\n\n[i]A Gift for My Foster Son — Co-op item gifting for Brotato (technical ID: AGiftforMyFosterSon-Mod).[/i]\n\n[b]合作模式：在商店里把已拥有的道具直接赠送给指定队友。[/b]\n\n[h2]功能 / Features[/h2][list][*]合作模式商店中,点击自己已拥有的道具,弹出赠送按钮(3/4人时每个队友一个按钮)[*]赠送后自己失去道具与效果,队友获得,双方面板即时刷新[*]目标玩家达到道具上限时按钮灰显并带提示[*]角色/武器/消耗品/升级/沙漏/一次性下波效果道具不可赠送[*]不干预游戏原生按钮(含 1.2 新版机械化工坊 UI),可随时启用或禁用[*]支持键盘与手柄焦点[*]内置兼容性自检,首次进商店会在日志输出 API 体检报告[/list]\n\n[h2]English[/h2][list][*]Adds a Gift button to owned-item popups in the co-op shop (one button per teammate in 3/4 player games)[*]You lose the item and its effects, the teammate gains them, both stat panels refresh instantly\n[*]Per-teammate item limit checks with disabled-state tooltips\n[*]Zero footprint on vanilla buttons — compatible with new 1.2 shop UI (Mechanize etc.)[/list]\n\n[h2]Compatibility / 兼容性[/h2][list][*]Built for Brotato 1.2.0.1 (Primal Dread)[*]Godot Mod Loader 6.3.0+[/list]",
+			"compatible_mod_loader_version": ["6.3.0"],
+			"compatible_game_version": ["1.2.0.1"],
+			"incompatibilities": ["RobocrafterLP-Trade", "ZloiDed-TradeMod"],
+			"optional_dependencies": [],
+			"load_before": [],
+			"tags": ["coop", "multiplayer", "qol", "items", "tweak"]
+		}
+	}
+}
