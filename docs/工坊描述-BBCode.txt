@@ -45,3 +45,7 @@ Pure script-extension mod — zero game files modified, safe to enable or disabl
 [h2]Credits / 致敬[/h2]
 Spiritual successor to [b]ShareWithYourBro[/b] by [b]xingye1673[/b] — tribute and thanks for the original 1.1.x co-op gifting mod.
 本 mod 为 ShareWithYourBro 的 1.2 复刻继任者，向原作者 xingye1673 致敬与感谢。
+
+[h2]Source Code / 开源[/h2]
+This mod is open source under the MIT License: [b]https://github.com/KhalidDu/AGiftforMyFosterSon[/b]
+本 mod 以 MIT 协议开源，源码与发行包内容一致，欢迎审计与贡献：https://github.com/KhalidDu/AGiftforMyFosterSon

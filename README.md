@@ -31,7 +31,7 @@ Brotato（土豆兄弟）合作模式**道具 & 武器赠送** mod —— [Share
 
 ## 安装
 
-- **推荐**：Steam 创意工坊订阅（条目发布后在此更新链接）
+- **推荐**：Steam 创意工坊订阅 → [这是一份给我义子的礼物](https://steamcommunity.com/sharedfiles/filedetails/?id=3835948655)
 - 手动：把 Release 的 zip 原样放进任意**处于订阅状态**的工坊 mod 文件夹（`<Steam>\steamapps\workshop\content\1942280\<已订阅mod的ID>\`）。注意 GML 6.3 只扫描 Steam 订阅目录内的 zip，自建文件夹不会被加载
 
 ## 仓库结构
@@ -61,7 +61,7 @@ GDScript (Godot 3.6) · Godot Mod Loader 6.3+ · 零依赖 · 纯脚本扩展
 
 ![A Gift for My FosterSon](art/icon-512.png)
 
-**A Gift for My FosterSon** — co-op item & weapon gifting mod for Brotato 1.2.0.1 (Primal Dread), spiritual successor to [ShareWithYourBro](https://steamcommunity.com/sharedfiles/filedetails/?id=3718814620).
+**A Gift for My FosterSon** — co-op item & weapon gifting mod for Brotato 1.2.0.1 (Primal Dread), spiritual successor to [ShareWithYourBro](https://steamcommunity.com/sharedfiles/filedetails/?id=3718814620). Available on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3835948655).
 
 ## Features
 
@@ -83,7 +83,7 @@ GDScript (Godot 3.6) · Godot Mod Loader 6.3+ · 零依赖 · 纯脚本扩展
 
 ## Install
 
-Subscribe on Steam Workshop (link coming after publish), or drop the Release zip into any **subscribed** workshop mod folder — GML 6.3 only scans zips inside Steam-subscribed item directories.
+Subscribe on [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3835948655), or drop the Release zip into any **subscribed** workshop mod folder — GML 6.3 only scans zips inside Steam-subscribed item directories.
 
 ## Compliance
 
