@@ -48,8 +48,8 @@ docs/工坊描述-BBCode.txt            # 工坊页面描述(BBCode)
 ## 合规声明
 
 - 本仓库与发行包**不含任何 Brotato 游戏代码**（扩展脚本全部自研，防御式探测不复制原方法体）
-- 不含任何第三方 mod 内容
-- 依据 Brotato 官方 modding 指南要求，本仓库保持**私有**；`stub-check/` 全部为自写桩，无版权顾虑
+- 不含任何第三方 mod 内容；`stub-check/` 全部为自写桩
+- 仓库与工坊发行包内容一致，可审计；以 [MIT](LICENSE) 协议开源
 
 ## 技术栈
 
@@ -87,6 +87,6 @@ Subscribe on Steam Workshop (link coming after publish), or drop the Release zip
 
 ## Compliance
 
-No Brotato game code in this repo or the release package (all extensions hand-written); no third-party mod content; `stub-check/` is fully self-authored stubs. The repo stays private per the official Brotato modding guide.
+No Brotato game code in this repo or the release package (all extensions hand-written); no third-party mod content; `stub-check/` is fully self-authored stubs. The repo mirrors the workshop package and is open-sourced under the [MIT License](LICENSE).
 
 Tech: GDScript (Godot 3.6) · Godot Mod Loader 6.3+ · zero dependencies · pure script extensions
