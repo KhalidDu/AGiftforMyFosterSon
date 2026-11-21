@@ -21,3 +21,5 @@ static func stb_has(m):
     return true
 static func stb_get(p):
     return null
+static func get_player_weapons(player_index):
+	return []

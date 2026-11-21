@@ -58,7 +58,7 @@ func _giftbro_refresh_visibility() -> void:
 	if not is_inside_tree() or not is_instance_valid(self):
 		return
 	var item_data = get("_item_data")
-	if _is_giftable_item(item_data) and RunData.is_coop_run and RunData.get_player_count() >= 2:
+	if _is_giftable_item(item_data) and _giftbro_gifting_available():
 		call_deferred("_update_button_visibilities")
 
 
@@ -122,7 +122,7 @@ func _get_insert_index(parent) -> int:
 
 
 func _ensure_gift_buttons() -> void:
-	if not (RunData.is_coop_run and RunData.get_player_count() >= 2):
+	if not _giftbro_gifting_available():
 		return
 
 	var parent = _get_button_parent()
@@ -246,9 +246,7 @@ func target_index_out_of_range(index: int, count: int) -> bool:
 # ---------------------------------------------------------------- 可见性接管
 
 func should_show_buttons(item_data, focused: bool) -> bool:
-	if _is_giftable_item(item_data) \
-		and RunData.is_coop_run \
-		and RunData.get_player_count() >= 2:
+	if _is_giftable_item(item_data) and _giftbro_gifting_available():
 		var enabled = get("buttons_enabled")
 		return (enabled == null or bool(enabled)) and focused
 	return .should_show_buttons(item_data, focused)
@@ -256,7 +254,7 @@ func should_show_buttons(item_data, focused: bool) -> bool:
 
 func _update_button_visibilities() -> void:
 	var item_data = get("_item_data")
-	if _is_giftable_item(item_data) and RunData.is_coop_run and RunData.get_player_count() >= 2:
+	if _is_giftable_item(item_data) and _giftbro_gifting_available():
 		if item_data is WeaponData:
 			# v0.1.8 武器:原版动作按钮(合成/机械化/回收)照常工作,赠送按钮叠加显示
 			._update_button_visibilities()
@@ -350,9 +348,7 @@ func _is_other_sell_mod_present() -> bool:
 
 func _update_gift_button_visibilities() -> void:
 	var item_data = get("_item_data")
-	if not _is_giftable_item(item_data) \
-		or not RunData.is_coop_run \
-		or RunData.get_player_count() < 2:
+	if not _is_giftable_item(item_data) or not _giftbro_gifting_available():
 		_hide_all_gift_buttons()
 		return
 
@@ -385,10 +381,13 @@ func _update_gift_button_visibilities() -> void:
 		gift_button.text = _get_gift_button_text(target_index)
 		gift_button.show()
 
-		# 每个目标独立检查上限:道具为持有上限(1.1.x 起 -1 表示无上限),武器为武器栏空位
+		# 每个目标独立检查上限:道具为持有上限(1.1.x 起 -1 表示无上限),
+		# 武器为 has_weapon_slot_available(含总槽位/近战远程分上限/去重规则)。
+		# v0.1.14 修复:此前误用 player_has_weapon_slots——它只检查"是否拥有
+		# 武器槽位效果"(给商店生成逻辑用的),几乎恒为 true,导致无视上限。
 		var can_gift: bool
 		if item_data is WeaponData:
-			can_gift = RunData.has_method("player_has_weapon_slots") and RunData.player_has_weapon_slots(target_index)
+			can_gift = RunData.has_method("has_weapon_slot_available") and RunData.has_weapon_slot_available(item_data, target_index)
 		else:
 			var remaining = RunData.get_remaining_max_nb_item(item_data, target_index)
 			can_gift = remaining > 0 or remaining == -1
@@ -604,11 +603,14 @@ func _giftbro_transfer_to(item_data, target_player_index: int) -> void:
 		return
 	if not _is_valid_gift_target(own_index, target_player_index):
 		return
+	# v0.1.14:最终守卫——仅在合作商店内允许赠送(箱子/升级选择等界面直接拒绝)
+	if not _giftbro_in_coop_shop():
+		return
 
-	# 上限守卫:道具为持有上限,武器为武器栏空位(与按钮灰显逻辑双保险)
+	# 上限守卫:道具为持有上限,武器为 has_weapon_slot_available(与按钮灰显双保险)
 	var is_weapon = item_data is WeaponData
 	if is_weapon:
-		if RunData.has_method("player_has_weapon_slots") and not RunData.player_has_weapon_slots(target_player_index):
+		if RunData.has_method("has_weapon_slot_available") and not RunData.has_weapon_slot_available(item_data, target_player_index):
 			return
 	else:
 		var remaining = RunData.get_remaining_max_nb_item(item_data, target_player_index)
@@ -718,6 +720,18 @@ func _giftbro_is_shop(node) -> bool:
 	return node.has_method("_get_coop_player_container")
 
 
+func _giftbro_in_coop_shop() -> bool:
+	# v0.1.14 关键修复:item_popup 被 6 个场景复用(商店/升级选择/箱子奖励/
+	# 角色面板/游戏内菜单等)。赠送只允许出现在合作商店里——升级/箱子选择
+	# 界面弹窗显示的是"待选数据"(尚未进入玩家 weapons 数组),在那里赠送
+	# 会导致 remove_weapon 找不到匹配→源不消失+目标获得复制品(无限复制)。
+	return _giftbro_find_ancestor("_giftbro_is_shop") != null
+
+
+func _giftbro_gifting_available() -> bool:
+	return RunData.is_coop_run and RunData.get_player_count() >= 2 and _giftbro_in_coop_shop()
+
+
 func _giftbro_get_player_container(player_index: int):
 	if player_index == get("player_index"):
 		return _giftbro_find_ancestor("_giftbro_is_player_container")
@@ -745,7 +759,9 @@ func _giftbro_transfer_weapon(weapon: WeaponData, source: int, target: int) -> b
 	if not (RunData.has_method("remove_weapon") and RunData.has_method("add_weapon")):
 		ModLoaderLog.error("transfer: RunData.remove_weapon/add_weapon unavailable. Aborted.", LOG_NAME)
 		return false
-	if RunData.has_method("player_has_weapon_slots") and not RunData.player_has_weapon_slots(target):
+	# v0.1.14:正确的武器槽检查(含总槽位/近战远程分上限/去重规则);
+	# player_has_weapon_slots 只检查"是否拥有武器槽效果",不能用于满员判断
+	if RunData.has_method("has_weapon_slot_available") and not RunData.has_weapon_slot_available(weapon, target):
 		ModLoaderLog.info("gift: target P%d weapon slots full, aborted." % (target + 1), LOG_NAME)
 		return false
 
@@ -762,7 +778,17 @@ func _giftbro_transfer_weapon(weapon: WeaponData, source: int, target: int) -> b
 
 	var original_effects = weapon.effects
 	weapon.effects = safe_effects
+
+	# v0.1.14 防复制纵深:remove_weapon 按 is_same_weapon 匹配,若源玩家的武器
+	# 数组里找不到(如箱子/升级选择界面的"待选数据"),必须中止且不得 add——
+	# 否则源不消失、目标获得复制品。以数组长度实际减少为成功判据。
+	var weapons_before: int = RunData.get_player_weapons(source).size()
 	RunData.remove_weapon(weapon, source)
+	if RunData.get_player_weapons(source).size() >= weapons_before:
+		weapon.effects = original_effects
+		ModLoaderLog.error("gift: weapon '%s' not found in P%d's weapons — aborted, no dupe." % [weapon.my_id, source + 1], LOG_NAME)
+		return false
+
 	weapon.effects = original_effects
 	for effect in dangerous:
 		var p = RunData.get_player_effect(effect.key_hash, source)
