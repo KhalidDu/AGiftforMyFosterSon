@@ -822,7 +822,14 @@ func _giftbro_transfer_item(item_data: ItemData, source: int, target: int) -> bo
 	item_data.effects = safe_effects
 
 	# 2. 正常移除(危险 effect 已摘除,不会除零)
+	# v0.1.15 防复制纵深(与武器路径一致):remove_item 在找不到匹配时静默跳过
+	# 移除却仍卸载效果,若继续 add 会让目标凭空获得道具——以数组长度实际减少为准
+	var items_before: int = RunData.get_player_items(source).size()
 	RunData.remove_item(item_data, source)
+	if RunData.get_player_items(source).size() >= items_before:
+		item_data.effects = original_effects
+		ModLoaderLog.error("gift: item '%s' not found in P%d's items — aborted, no dupe." % [item_data.my_id, source + 1], LOG_NAME)
+		return false
 
 	# 3. 还原 effects 并清理源玩家残留数据
 	item_data.effects = original_effects
