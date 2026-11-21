@@ -279,6 +279,12 @@ func _update_weapon_gift_overlay() -> void:
 		_hide_all_gift_buttons()
 		_restore_cancel_focus_top()
 		return
+	# v0.1.16:源玩家被"锁定当前武器"(lock_current_weapons)效果约束时,
+	# 原版会隐藏合成与回收按钮——赠送同样应当被禁止(否则成为绕过锁的后门)
+	if _giftbro_weapons_locked(int(get("player_index"))):
+		_hide_all_gift_buttons()
+		_restore_cancel_focus_top()
+		return
 	# v0.1.12: 机械化效果选择子界面打开期间不显示赠送按钮(避免赠送与效果选择
 	# 两套流程同时在弹窗里生效,该状态下 EffectButton 也接管了取消键的导航)
 	var effect_choice = get("_effect_choice_container")
@@ -606,6 +612,11 @@ func _giftbro_transfer_to(item_data, target_player_index: int) -> void:
 	# v0.1.14:最终守卫——仅在合作商店内允许赠送(箱子/升级选择等界面直接拒绝)
 	if not _giftbro_in_coop_shop():
 		return
+	# v0.1.16:源玩家的武器被 lock_current_weapons 效果锁定时禁止赠送
+	# (原版对该效果同样封禁合成与回收;不检查则赠送成为绕过锁的后门)
+	if item_data is WeaponData and _giftbro_weapons_locked(int(own_index)):
+		ModLoaderLog.info("gift: P%d's weapons are locked (lock_current_weapons) — aborted." % (own_index + 1), LOG_NAME)
+		return
 
 	# 上限守卫:道具为持有上限,武器为 has_weapon_slot_available(与按钮灰显双保险)
 	var is_weapon = item_data is WeaponData
@@ -726,6 +737,20 @@ func _giftbro_in_coop_shop() -> bool:
 	# 界面弹窗显示的是"待选数据"(尚未进入玩家 weapons 数组),在那里赠送
 	# 会导致 remove_weapon 找不到匹配→源不消失+目标获得复制品(无限复制)。
 	return _giftbro_find_ancestor("_giftbro_is_shop") != null
+
+
+func _giftbro_weapons_locked(player_index: int) -> bool:
+	# v0.1.16:探测源玩家的 lock_current_weapons 效果("锁定当前武器")。
+	# 原版在该效果下隐藏合成与回收按钮(base_shop 的 combine/discard 处理
+	# 均以它为第一守卫);赠送是移除武器的第三条通道,必须同样遵守。
+	# 通过 /root/Keys 单例动态取 hash,避免硬编码对 Keys 的编译期依赖。
+	var keys = get_node_or_null("/root/Keys")
+	if keys == null or not RunData.has_method("get_player_effect_bool"):
+		return false
+	var lock_hash = keys.get("lock_current_weapons_hash")
+	if lock_hash == null:
+		return false
+	return bool(RunData.get_player_effect_bool(lock_hash, player_index))
 
 
 func _giftbro_gifting_available() -> bool:

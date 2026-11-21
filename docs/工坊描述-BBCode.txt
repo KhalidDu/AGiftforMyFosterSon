@@ -25,6 +25,7 @@
 [h2]Update / 更新日志[/h2][list]
 [*]0.1.14 — Fixed: weapon gifting now respects the teammate's weapon slot limit (wrong API used before); gift buttons no longer appear outside the shop (crate/upgrade selection screens could duplicate weapons); removal is verified before adding — duplication is impossible. / 修复：赠送武器不再无视队友武器栏上限（此前误用 API）；赠送按钮不再出现在商店之外的界面（箱子/升级选择界面的待选数据可导致武器无限复制）；转移前校验移除结果，杜绝复制。
 [*]0.1.15 — Same dupe-guard applied to the item path (remove_item also silently skips when no match is found). / 道具路径同样加上移除校验（remove_item 匹配不到时同样静默跳过），防复制全覆盖。
+[*]0.1.16 — Gifting a weapon is now also blocked while the owner is under the lock_current_weapons effect (vanilla blocks combine & recycle; gifting was a loophole). / 源玩家处于「锁定当前武器」效果时禁止赠送武器（原版对合成/回收同样封禁，此前赠送是绕过锁的后门）。
 [*]0.1.13 — Mod ID renamed to KD-AGiftforMyFosterSon; fixed in-game display name. / Mod ID 更名为 KD-AGiftforMyFosterSon，修复游戏内显示名。
 [*]0.1.12 — Hide Mechanize/upgrade button in item mode; gift buttons hidden while the mechanize effect chooser is open. / 道具模式隐藏机械化/升级按钮；机械化效果选择界面打开期间不显示赠送按钮。
 [*]0.1.11 — Popup now closes properly after gifting; fixed ESC focus deadlock. / 修复赠送后弹窗残留、按 ESC 后焦点死锁。
